@@ -1,8 +1,10 @@
-# app.py
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import os
 from functools import wraps
-from db import init_db_users, create_user, check_login
+from db import (
+    init_db_all, create_user, check_login,
+    create_project, list_user_projects
+)
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret")
@@ -61,13 +63,22 @@ def logout():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    projects = list_user_projects(current_user_id())
+    return render_template("dashboard.html", projects=projects)
+
+@app.route("/project/create", methods=["POST"])
+@login_required
+def project_create():
+    name = request.form.get("name", "").strip() or "New Project"
+    pid = create_project(name, current_user_id())
+    flash("Project created.", "success")
+    return redirect(url_for("dashboard"))
 
 @app.cli.command("init-db")
 def init_db_cmd():
-    init_db_users()
-    print("DB initialized (users).")
+    init_db_all()
+    print("DB initialized (users + projects). No demo user created.")
 
 if __name__ == "__main__":
-    init_db_users()
+    init_db_all()
     app.run(debug=True)
