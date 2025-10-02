@@ -12,12 +12,12 @@
 <div class="row g-3">
   {% for p in projects %}
     <div class="col-md-4">
-      <div class="card shadow-sm">
+      <a class="card text-decoration-none" href="{{ url_for('project_view', project_id=p.id) }}">
         <div class="card-body">
           <h2 class="h5 m-0">{{ p.name }}</h2>
           <div class="small text-secondary">Created: {{ p.created_at }}</div>
         </div>
-      </div>
+      </a>
     </div>
   {% else %}
     <p class="text-secondary">No projects yet. Create one!</p>

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Project - {{ project.name }}{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h4 m-0">{{ project.name }}</h1>
+  <form class="d-flex gap-2" action="{{ url_for('add_member_route', project_id=project.id) }}" method="post">
+    <input class="form-control" name="username" placeholder="Add member by username" />
+    <button class="btn btn-outline-primary">Add</button>
+  </form>
+</div>
+
+<div class="mb-3">
+  <form class="d-flex gap-2" action="{{ url_for('column_create_route') }}" method="post">
+    <input type="hidden" name="project_id" value="{{ project.id }}" />
+    <input class="form-control" name="name" placeholder="New column" />
+    <button class="btn btn-secondary">Add column</button>
+  </form>
+</div>
+
+<div class="row g-3">
+  {% for col in columns %}
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-header">
+        <form class="d-flex gap-2" action="{{ url_for('column_rename_route', column_id=col.id) }}" method="post">
+          <input type="hidden" name="project_id" value="{{ project.id }}" />
+          <input class="form-control form-control-sm" name="name" value="{{ col.name }}" />
+          <button class="btn btn-sm btn-outline-light">Save</button>
+        </form>
+        <form class="mt-2" action="{{ url_for('column_delete_route', column_id=col.id) }}" method="post" onsubmit="return confirm('Delete column?');">
+          <input type="hidden" name="project_id" value="{{ project.id }}" />
+          <button class="btn btn-sm btn-outline-danger">Delete</button>
+        </form>
+      </div>
+
+      <div class="card-body">
+        {% for card in cards_by_col.get(col.id, []) %}
+        <div class="border rounded p-2 mb-2">
+          <div class="fw-semibold">{{ card.title }}</div>
+          {% if card.description %}<div class="small text-secondary">{{ card.description }}</div>{% endif %}
+          <div class="small text-secondary">Assignee: {{ card.assignee_name or "—" }}</div>
+
+          <details class="mt-2">
+            <summary class="small">Edit / Move</summary>
+            <form class="mt-2 d-grid gap-2" action="{{ url_for('card_edit_route', card_id=card.id) }}" method="post">
+              <input type="hidden" name="project_id" value="{{ project.id }}" />
+              <input class="form-control form-control-sm" name="title" value="{{ card.title }}" />
+              <textarea class="form-control form-control-sm" name="description" rows="2">{{ card.description }}</textarea>
+              <select class="form-select form-select-sm" name="assignee_id">
+                <option value="">Unassigned</option>
+                {% for u in members %}
+                  <option value="{{ u.id }}" {% if card.assignee_id==u.id %}selected{% endif %}>{{ u.username }}</option>
+                {% endfor %}
+              </select>
+              <button class="btn btn-sm btn-primary">Save</button>
+            </form>
+
+            <form class="mt-2 d-flex gap-2" action="{{ url_for('card_move_route', card_id=card.id) }}" method="post">
+              <input type="hidden" name="project_id" value="{{ project.id }}" />
+              <select class="form-select form-select-sm" name="to_column_id">
+                {% for c2 in columns %}
+                  <option value="{{ c2.id }}" {% if c2.id==col.id %}selected{% endif %}>{{ c2.name }}</option>
+                {% endfor %}
+              </select>
+              <button class="btn btn-sm btn-outline-secondary">Move</button>
+            </form>
+
+            <form class="mt-2" action="{{ url_for('card_delete_route', card_id=card.id) }}" method="post" onsubmit="return confirm('Delete card?');">
+              <input type="hidden" name="project_id" value="{{ project.id }}" />
+              <button class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+          </details>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="card-footer">
+        <form class="d-grid gap-2" action="{{ url_for('card_create_route') }}" method="post">
+          <input type="hidden" name="project_id" value="{{ project.id }}" />
+          <input type="hidden" name="column_id" value="{{ col.id }}" />
+          <input class="form-control form-control-sm" name="title" placeholder="Card title" />
+          <textarea class="form-control form-control-sm" name="description" rows="2" placeholder="Description (optional)"></textarea>
+          <select class="form-select form-select-sm" name="assignee_id">
+            <option value="">Assign to…</option>
+            {% for u in members %}<option value="{{ u.id }}">{{ u.username }}</option>{% endfor %}
+          </select>
+          <button class="btn btn-sm btn-success">+ Add card</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

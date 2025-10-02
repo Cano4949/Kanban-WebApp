@@ -1,9 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+# app.py
+from flask import Flask, render_template, request, redirect, url_for, session, flash, abort
 import os
 from functools import wraps
 from db import (
     init_db_all, create_user, check_login,
-    create_project, list_user_projects
+    create_project, list_user_projects, get_project,
+    is_member, add_member, project_members,
+    list_columns, create_column, rename_column, delete_column,
+    list_cards_by_column, create_card, update_card, delete_card, move_card
 )
 
 app = Flask(__name__)
@@ -70,14 +74,105 @@ def dashboard():
 @login_required
 def project_create():
     name = request.form.get("name", "").strip() or "New Project"
-    pid = create_project(name, current_user_id())
+    create_project(name, current_user_id())
     flash("Project created.", "success")
     return redirect(url_for("dashboard"))
+
+@app.route("/project/<int:project_id>")
+@login_required
+def project_view(project_id):
+    if not is_member(current_user_id(), project_id):
+        abort(403)
+    project = get_project(project_id)
+    members = project_members(project_id)
+    columns = list_columns(project_id)
+    cards_by_col = list_cards_by_column(project_id)
+    return render_template("project.html", project=project, members=members, columns=columns, cards_by_col=cards_by_col)
+
+@app.route("/project/<int:project_id>/members/add", methods=["POST"])
+@login_required
+def add_member_route(project_id):
+    if not is_member(current_user_id(), project_id):
+        abort(403)
+    username = request.form["username"].strip()
+    if add_member(project_id, username):
+        flash("Member added.", "success")
+    else:
+        flash("User not found.", "warning")
+    return redirect(url_for("project_view", project_id=project_id))
+
+@app.route("/column/create", methods=["POST"])
+@login_required
+def column_create_route():
+    pid = int(request.form["project_id"])
+    if not is_member(current_user_id(), pid): abort(403)
+    name = request.form.get("name", "").strip() or "New Column"
+    create_column(pid, name)
+    return redirect(url_for("project_view", project_id=pid))
+
+@app.route("/column/<int:column_id>/rename", methods=["POST"])
+@login_required
+def column_rename_route(column_id):
+    pid = int(request.form["project_id"])
+    if not is_member(current_user_id(), pid): abort(403)
+    name = request.form.get("name", "").strip() or "Column"
+    rename_column(column_id, name)
+    return redirect(url_for("project_view", project_id=pid))
+
+@app.route("/column/<int:column_id>/delete", methods=["POST"])
+@login_required
+def column_delete_route(column_id):
+    pid = int(request.form["project_id"])
+    if not is_member(current_user_id(), pid): abort(403)
+    delete_column(column_id)
+    return redirect(url_for("project_view", project_id=pid))
+
+@app.route("/card/create", methods=["POST"])
+@login_required
+def card_create_route():
+    pid = int(request.form["project_id"])
+    if not is_member(current_user_id(), pid): abort(403)
+    col_id = int(request.form["column_id"])
+    title = request.form.get("title", "").strip() or "New Card"
+    desc = request.form.get("description", "").strip()
+    assignee_id = request.form.get("assignee_id")
+    assignee_id = int(assignee_id) if assignee_id else None
+    create_card(col_id, title, desc, assignee_id)
+    return redirect(url_for("project_view", project_id=pid))
+
+@app.route("/card/<int:card_id>/edit", methods=["POST"])
+@login_required
+def card_edit_route(card_id):
+    pid = int(request.form["project_id"])
+    if not is_member(current_user_id(), pid): abort(403)
+    title = request.form.get("title", "").strip() or "Card"
+    desc = request.form.get("description", "").strip()
+    assignee_id = request.form.get("assignee_id")
+    assignee_id = int(assignee_id) if assignee_id else None
+    update_card(card_id, title, desc, assignee_id)
+    return redirect(url_for("project_view", project_id=pid))
+
+@app.route("/card/<int:card_id>/delete", methods=["POST"])
+@login_required
+def card_delete_route(card_id):
+    pid = int(request.form["project_id"])
+    if not is_member(current_user_id(), pid): abort(403)
+    delete_card(card_id)
+    return redirect(url_for("project_view", project_id=pid))
+
+@app.route("/card/<int:card_id>/move", methods=["POST"])
+@login_required
+def card_move_route(card_id):
+    pid = int(request.form["project_id"])
+    if not is_member(current_user_id(), pid): abort(403)
+    to_col = int(request.form["to_column_id"])
+    move_card(card_id, to_col)
+    return redirect(url_for("project_view", project_id=pid))
 
 @app.cli.command("init-db")
 def init_db_cmd():
     init_db_all()
-    print("DB initialized (users + projects). No demo user created.")
+    print("DB initialized (users, projects, columns, cards). No demo user created.")
 
 if __name__ == "__main__":
     init_db_all()
