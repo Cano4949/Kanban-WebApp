@@ -1,0 +1,25 @@
+
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h4 m-0">Your Projects</h1>
+  
+</div>
+
+<div class="row g-3">
+  {% for p in projects %}
+  <div class="col-md-4">
+    <a class="card text-decoration-none hover-card" href="{{ url_for('project_view', project_id=p.id) }}">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between">
+          <h2 class="h5 m-0">{{ p.name }}</h2>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% else %}
+    <p class="text-secondary">No projects yet. Create one!</p>
+  {% endfor %}
+</div>
+{% endblock %}
