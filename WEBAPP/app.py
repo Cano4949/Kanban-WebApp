@@ -7,7 +7,7 @@ from db import (
     create_project, list_user_projects, get_project,
     is_member, add_member, project_members,
     list_columns, create_column, rename_column, delete_column,
-    list_cards_by_column, create_card, update_card, delete_card, move_card
+    list_cards_by_column, create_card, update_card, delete_card, move_card, is_owner, delete_project
 )
 
 app = Flask(__name__)
@@ -168,6 +168,18 @@ def card_move_route(card_id):
     to_col = int(request.form["to_column_id"])
     move_card(card_id, to_col)
     return redirect(url_for("project_view", project_id=pid))
+
+@app.route("/project/<int:project_id>/delete", methods=["POST"])
+@login_required
+def project_delete(project_id):
+    if not is_member(current_user_id(), project_id):
+        abort(403)
+    if not is_owner(current_user_id(), project_id):
+        abort(403)
+    delete_project(project_id)
+    flash("Project deleted.", "success")
+    return redirect(url_for("dashboard"))
+
 
 @app.cli.command("init-db")
 def init_db_cmd():

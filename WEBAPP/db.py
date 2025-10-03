@@ -233,3 +233,20 @@ def move_card(card_id: int, to_column_id: int):
     maxpos = cur.execute("SELECT COALESCE(MAX(position), -1) FROM cards WHERE column_id=?", (to_column_id,)).fetchone()[0]
     cur.execute("UPDATE cards SET column_id=?, position=? WHERE id=?", (to_column_id, maxpos+1, card_id))
     conn.commit(); conn.close()
+
+def is_owner(user_id: int, project_id: int) -> bool:
+    conn = get_conn()
+    row = conn.execute(
+        "SELECT 1 FROM project_members WHERE user_id=? AND project_id=? AND role='owner'",
+        (user_id, project_id)
+    ).fetchone()
+    conn.close()
+    return row is not None
+
+def delete_project(project_id: int):
+    """Deletes the project. Thanks to FOREIGN KEYs with ON DELETE CASCADE,
+    this also deletes memberships, columns, and cards."""
+    conn = get_conn()
+    conn.execute("DELETE FROM projects WHERE id=?", (project_id,))
+    conn.commit()
+    conn.close()

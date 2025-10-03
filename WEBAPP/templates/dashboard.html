@@ -12,12 +12,23 @@
 <div class="row g-3">
   {% for p in projects %}
     <div class="col-md-4">
-      <a class="card text-decoration-none" href="{{ url_for('project_view', project_id=p.id) }}">
-        <div class="card-body">
-          <h2 class="h5 m-0">{{ p.name }}</h2>
-          <div class="small text-secondary">Created: {{ p.created_at }}</div>
+      <div class="card shadow-sm h-100">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-start">
+            <h2 class="h5 m-0">
+              <a class="text-decoration-none" href="{{ url_for('project_view', project_id=p.id) }}">{{ p.name }}</a>
+            </h2>
+          </div>
+          <div class="small text-secondary mt-1">Created: {{ p.created_at }}</div>
+
+          <div class="mt-auto pt-3 d-flex gap-2">
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('project_view', project_id=p.id) }}">Open</a>
+            <form action="{{ url_for('project_delete', project_id=p.id) }}" method="post">
+              <button class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+          </div>
         </div>
-      </a>
+      </div>
     </div>
   {% else %}
     <p class="text-secondary">No projects yet. Create one!</p>

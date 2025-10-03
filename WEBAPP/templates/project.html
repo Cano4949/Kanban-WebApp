@@ -7,6 +7,10 @@
     <input class="form-control" name="username" placeholder="Add member by username" />
     <button class="btn btn-outline-primary">Add</button>
   </form>
+  <form action="{{ url_for('project_delete', project_id=project.id) }}" method="post" class="ms-2">
+  <button class="btn btn-outline-danger btn-sm">Delete Project</button>
+</form>
+
 </div>
 
 <div class="mb-3">
