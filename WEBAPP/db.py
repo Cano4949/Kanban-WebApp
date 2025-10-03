@@ -89,12 +89,13 @@ def create_project(name: str, owner_id: int) -> int:
     cur.execute("INSERT INTO projects(name) VALUES(?)", (name,))
     pid = cur.lastrowid
     cur.execute("INSERT INTO project_members(user_id, project_id, role) VALUES(?,?, 'owner')", (owner_id, pid))
-    
-    for i, cname in enumerate(["To Do", "In Progress", "Done"]):
+
+    for i, cname in enumerate(["To Do", "In Progress", "Review", "Done"]):
         cur.execute("INSERT INTO columns(name, position, project_id) VALUES(?,?,?)", (cname, i, pid))
     conn.commit()
     conn.close()
     return pid
+
 
 def list_user_projects(user_id: int):
     conn = get_conn()
