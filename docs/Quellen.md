@@ -97,4 +97,5 @@ Hier sammeln wir alle Links, Tutorials und Ressourcen, die während der Entwickl
 
 ## ChatGPT Verlauf
 
--[ChatGBT_Verlauf](https://chatgpt.com/share/68e2eb44-3460-8001-9d2e-5bc739d60c1e) 
+- [ChatGBT_Verlauf](https://chatgpt.com/share/68e2eb44-3460-8001-9d2e-5bc739d60c1e) 
+
