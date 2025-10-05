@@ -1,5 +1,5 @@
 title: KanBan WebApp
-remote_theme: just-the-docs/just-the-docs
+theme: jekyll-theme-minimal
 mermaid:
   version: "10.9.0" 
 callouts:
@@ -15,6 +15,9 @@ callouts:
   download:
     title: 💾 Download
     color: grey-dk
+<<<<<<< HEAD
 
 search_enabled: true
 color_scheme: light
+=======
+>>>>>>> refs/remotes/origin/main
