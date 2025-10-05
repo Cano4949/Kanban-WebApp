@@ -1,5 +1,5 @@
 title: KanBan WebApp
-theme: jekyll-theme-minimal
+theme: just-the-docs
 mermaid:
   version: "10.9.0" 
 callouts:
