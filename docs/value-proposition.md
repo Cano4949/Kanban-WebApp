@@ -1,5 +1,6 @@
 ---
 title: Value Proposition
+parent: Home
 nav_order: 1
 ---
 

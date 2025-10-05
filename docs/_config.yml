@@ -4,18 +4,19 @@ remote_theme: just-the-docs/just-the-docs
 plugins:
   - jekyll-remote-theme
 
+color_scheme: dark
 mermaid:
-  version: "10.9.0" 
+  version: "10.9.0"
 callouts:
   tip:
-    title: 🤍 Tip
+    title: "🤍 Tip"
     color: purple
   info:
-    title: ℹ️ Info
+    title: "ℹ️ Info"
     color: blue
   attention:
-    title: ❕ Attention
+    title: "❕ Attention"
     color: yellow
   download:
-    title: 💾 Download
+    title: "💾 Download"
     color: grey-dk
