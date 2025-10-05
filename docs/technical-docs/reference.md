@@ -178,7 +178,7 @@ Karten enthalten Titel, optionale Beschreibung und optionale Zuweisung an ein Te
 
 **Sample output:**
 
-![alt text](../assets/images/add_card.png)
+![alt text](../assets/images/project_view.png)
 
 ---
 
@@ -201,7 +201,7 @@ Diese Aktion simuliert Drag & Drop, da JavaScript nicht verwendet wird.
 
 **Sample output:**
 
-![alt text](../assets/images/card_move.png)
+![alt text](../assets/images/card_edit.png)
 
 ---
 
