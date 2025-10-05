@@ -15,3 +15,6 @@ callouts:
   download:
     title: 💾 Download
     color: grey-dk
+
+search_enabled: true
+color_scheme: light

@@ -13,7 +13,7 @@ nav_order: 0
 ### Caner Akgül
 
 About
-: Tim entwickelt die gesamte Kanban Web App.
+: Caner entwickelt die gesamte Kanban Web App.
 Er ist verantwortlich für das Design der Benutzeroberfläche mit Jinja2-Templates und Bootstrap 5, sorgt für ein modernes, responsives Layout und eine klare Nutzerführung.
 Außerdem programmiert er das Backend mit Flask, entwirft und implementiert die SQLite-Datenbankstruktur inklusive aller Funktionen wie Login, Projekte, Karten und Spalten.
 Zusätzlich erstellt er die Dokumentation zur Anwendung und beschreibt die Ziele und den Nutzen der App, damit verständlich wird, wie die Kanban Web App funktioniert und welchen Mehrwert sie bietet.
