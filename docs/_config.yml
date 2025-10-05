@@ -1,5 +1,9 @@
 title: KanBan WebApp
-theme: just-the-docs/just-the-docs
+remote_theme: just-the-docs/just-the-docs
+
+plugins:
+  - jekyll-remote-theme
+
 mermaid:
   version: "10.9.0" 
 callouts:
