@@ -69,7 +69,7 @@ Hier sammeln wir alle Links, Tutorials und Ressourcen, die während der Entwickl
 
 - [Graphviz Documentation](https://graphviz.org/documentation/)
 - [Mermaid Live Editor](https://mermaid-js.github.io/mermaid-live-editor/)
-- [Lucidchart](https://www.lucidchart.com/pages/)
+- [Miro](https://miro.com/)
 - [Markdown Guide](https://www.markdownguide.org/basic-syntax/)
 - [Just the Docs Theme](https://just-the-docs.github.io/just-the-docs/)
 - [GitHub Markdown Reference](https://github.github.com/gfm/)
